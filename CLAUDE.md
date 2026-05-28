@@ -16,7 +16,7 @@
 
 ## Статус деплоя
 
-- **Нет удалённого репозитория (origin)** — репозиторий только локальный
+- **GitHub (origin):** `https://github.com/overgoer/eddytester`
 - **Нет CI/CD** — автодеплоя при мерже нет, деплой всегда ручной
 - Деплой на сервер — SCP файла на Timeweb, **но только из main и только через Git-workflow ниже**
 
@@ -33,6 +33,7 @@
 # 2. Создать бэкап main перед изменениями
 git checkout main
 git tag backup/YYYY-MM-DD  # например: backup/2026-05-28
+git push origin --tags
 
 # 3. Создать ветку для изменений от main
 git checkout -b fix/название-правки
@@ -40,6 +41,7 @@ git checkout -b fix/название-правки
 # 4. Внести изменения, закоммитить
 git add page101918416.html
 git commit -m "fix: что сделано"
+git push origin fix/название-правки
 
 # 5. Протестировать на тестовой странице
 #    Задеплоить ветку на test.html:
@@ -50,6 +52,7 @@ scp -P 2222 page101918416.html root@85.193.81.51:/var/www/eddytester.com/test.ht
 # 6. После успешного теста — смержить в main
 git checkout main
 git merge fix/название-правки
+git push origin main
 
 # 7. Задеплоить main на сервер
 scp -P 2222 page101918416.html root@85.193.81.51:/var/www/eddytester.com/page101918416.html
@@ -59,6 +62,7 @@ ssh -p 2222 root@85.193.81.51 "rm /var/www/eddytester.com/test.html"
 
 # 9. Удалить ветку
 git branch -d fix/название-правки
+git push origin --delete fix/название-правки
 ```
 
 ### Коротко (памятка)
