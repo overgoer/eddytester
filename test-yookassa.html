@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ЮKassa Test — API Практикум</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #f7f9fc;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .card {
+      background: #fff; border-radius: 16px; padding: 40px;
+      max-width: 480px; width: 100%; box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    h1 { font-size: 24px; margin-bottom: 8px; color: #1a1a1a; }
+    p { font-size: 14px; color: #888; margin-bottom: 32px; }
+    .price { font-size: 36px; font-weight: 700; color: #036cff; margin-bottom: 32px; }
+    .btn {
+      display: inline-block; width: 100%;
+      padding: 16px 32px; font-size: 18px; font-weight: 700;
+      color: #fff; background: #036cff; border: none; border-radius: 10px;
+      cursor: pointer; transition: background 0.2s; text-decoration: none;
+    }
+    .btn:hover { background: #0255cc; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    #payment-container { margin-top: 24px; min-height: 300px; }
+    .status { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 14px; }
+    .status.loading { background: #e8f0fe; color: #036cff; }
+    .status.error { background: #fde8e8; color: #d32f2f; }
+    .status.success { background: #e8f5e9; color: #2e7d32; }
+    .back { margin-top: 24px; font-size: 13px; color: #888; }
+    .back a { color: #036cff; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>API Практикум</h1>
+    <p>Доступ к тренажёру на 30 дней</p>
+    <div class="price">2 900 ₽</div>
+    <button class="btn" id="payBtn" onclick="startPayment()">Купить</button>
+    <div id="payment-container"></div>
+    <div id="status"></div>
+    <div class="back"><a href="/api-practicum">← На лендинг</a></div>
+  </div>
+
+  <script src="https://cdn.yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+  <script>
+    async function startPayment() {
+      const btn = document.getElementById('payBtn');
+      const status = document.getElementById('status');
+      const container = document.getElementById('payment-container');
+
+      btn.disabled = true;
+      status.className = 'status loading';
+      status.textContent = 'Создание платежа...';
+
+      try {
+        const resp = await fetch('/create-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: 2900,
+            description: 'API Практикум'
+          })
+        });
+
+        const data = await resp.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Ошибка создания платежа');
+        }
+
+        status.textContent = '';
+        container.innerHTML = '';
+
+        const widget = new YooKassaCheckoutWidget({
+          confirmation_token: data.confirmation_token,
+          return_url: 'https://eddytester.com/api',
+          error_url: 'https://eddytester.com/api',
+          customization: {
+            colors: {
+              primary: '#036cff',
+              background: '#ffffff',
+              text: '#1a1a1a',
+              buttonText: '#ffffff'
+            }
+          }
+        });
+
+        widget.on('success', function() {
+          status.className = 'status success';
+          status.textContent = '✅ Оплата прошла! Перенаправляем...';
+          setTimeout(() => { window.location = 'https://eddytester.com/api'; }, 1500);
+        });
+
+        widget.on('error', function(e) {
+          status.className = 'status error';
+          status.textContent = '❌ Ошибка оплаты: ' + e;
+          btn.disabled = false;
+        });
+
+        widget.render('payment-container');
+
+      } catch (e) {
+        status.className = 'status error';
+        status.textContent = '❌ ' + e.message;
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
