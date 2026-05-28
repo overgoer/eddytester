@@ -49,7 +49,7 @@
     <div class="back"><a href="/api-practicum">← На лендинг</a></div>
   </div>
 
-  <script src="https://cdn.yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+  <script src="https://static.yoomoney.ru/checkout-client/checkout-widget.js"></script>
   <script>
     async function startPayment() {
       const btn = document.getElementById('payBtn');
@@ -79,7 +79,7 @@
         status.textContent = '';
         container.innerHTML = '';
 
-        const widget = new YooKassaCheckoutWidget({
+        const widget = new YooMoneyCheckoutWidget({
           confirmation_token: data.confirmation_token,
           return_url: 'https://eddytester.com/api',
           error_url: 'https://eddytester.com/api',
