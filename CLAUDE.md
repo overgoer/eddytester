@@ -170,7 +170,7 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - Уведомления пока через sendmail на root. Для Telegram — нужен бот-токен
 - Если SSH не работает — через аптайм сервера, Apache не перезагружать
 
-### 2. ЮKassa — платежи — 🟡 В РАБОТЕ (ветка feat/yookassa-payments)
+### 2. ЮKassa — платежи — ✅ СДЕЛАНО (ветка feat/yookassa-payments)
 
 **Статус на 2026-05-28:**
 - ✅ `payment.js` — Node.js сервер на порту 3457 (PM2, payment-yookassa)
@@ -179,21 +179,45 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - ✅ Бэкенд возвращает confirmation_token от ЮKassa
 - ✅ Тестовая страница: `https://eddytester.com/test-yookassa.html`
 - ✅ `page101918416.html` — Prodamus удалён, добавлен YooKassa Checkout Widget
-- ⬜ **Тест в браузере** — открыть `test-yookassa.html`, нажать "Купить", провести тестовый платёж
-- ⬜ Мерж в main после теста
+- ✅ **Тест пройден** — платёж 10₽ успешно проведён через Tinkoff (карта MIR, без 3-D Secure)
+- ✅ CDN виджета: `https://yookassa.ru/checkout-widget/v1/checkout-widget.js` (класс `YooMoneyCheckoutWidget`)
+- ✅ Вмержено в main, задеплоено в продакшен
+- ⬜ **Создать тестовый магазин** в ЛК ЮKassa (`https://yookassa.ru/my/`) для безопасного тестирования
+- ⬜ Настроить рефанды — через Tinkoff gateway не работают, нужна конфигурация в ЛК ЮKassa
 
 **Архитектура:**
-- Кнопка "Купить" → POST /create-payment → ЮKassa API → confirmation_token → YooKassaCheckoutWidget
+- Кнопка "Купить" → POST /create-payment → ЮKassa API → confirmation_token → YooMoneyCheckoutWidget
 - После оплаты → редирект на `https://eddytester.com/api`
 - Ключи в `/var/www/eddytester.com/.env`
+- `test: true` в API **не работает** с production магазином — нужен отдельный тестовый магазин
+- Виджет грузится с `yookassa.ru/checkout-widget/v1/checkout-widget.js` (не `static.yoomoney.ru`)
 
-### 3. Уборка на сервере
+**Уроки:**
+- `YooKassaCheckoutWidget` не существует — правильное имя `YooMoneyCheckoutWidget`
+- Тестовые карты ЮKassa: `5555555555554444` (Mastercard без 3DS), `4111111111111111` (Visa без 3DS) и др.
+- Production магазин игнорирует `test: true` — для тестовых платежей нужен тестовый магазин
+
+### 3. Тестовый магазин ЮKassa
+
+Создать тестовый магазин в ЛК ЮKassa (`https://yookassa.ru/my/`), получить shopId + secretKey.
+Обновить `payment.js` для поддержки тестовых ключей (переключение по `test: true`).
+
+### 4. Уборка на сервере
 
 - Удалить `/var/www/eddytester.com/page101918416.html.bak`
 - Удалить `/var/www/eddytester.com/test.html`
-- Удалить `readme.txt`
+- Удалить `/var/www/eddytester.com/readme.txt`
+- Разобраться с `index.html` в корне (содержит старый Prodamus код)
 
-### 4. Тестирование изменений (вместо пароля)
+### 5. Инфраструктура
+
+- ⬜ Починить SSH (периодически "Connection timed out during banner exchange" на порту 2222)
+- ⬜ `certbot renew --dry-run` — запустить когда SSH заработает
+- ⬜ Удалить дубли в crontab (`sort -u`)
+- ⬜ PM2: в памяти 6.0.14, локально 7.0.1 — нужен `pm2 update`
+- ⬜ Добавить Telegram-уведомления о продлении сертификата
+
+### 6. Тестирование изменений
 
 При изменениях лендинга:
 1. Проверять локально — открыть HTML-файл в браузере (Tilda-экспорт работает как статика, сервер не нужен)
