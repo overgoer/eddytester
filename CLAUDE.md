@@ -200,7 +200,15 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - Тестовые карты ЮKassa: `5555555555554444` (Mastercard без 3DS), `4111111111111111` (Visa без 3DS) и др.
 - Production магазин игнорирует `test: true` — для тестовых платежей нужен тестовый магазин
 
-### 3. Тестовый магазин ЮKassa
+### 3. Рефакторинг: один попап ЮKassa для всех кнопок
+
+Сейчас цена 2 900 ₽ зашита в HTML попапа и в JS. Задача:
+- Одна функция `openYooKassaPayment(amount, description)`
+- Кнопки хранят цену в `data-amount` и `data-description`
+- JS читает атрибуты с кнопки, подставляет в попап и в API-запрос
+- Одна итерация: перевести pricing-кнопку на новую схему
+
+### 4. Тестовый магазин ЮKassa
 
 Создать тестовый магазин в ЛК ЮKassa (`https://yookassa.ru/my/`), получить shopId + secretKey.
 Обновить `payment.js` для поддержки тестовых ключей (переключение по `test: true`).
