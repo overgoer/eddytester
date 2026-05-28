@@ -82,14 +82,10 @@
         const widget = new YooMoneyCheckoutWidget({
           confirmation_token: data.confirmation_token,
           return_url: 'https://eddytester.com/api',
-          error_url: 'https://eddytester.com/api',
-          customization: {
-            colors: {
-              primary: '#036cff',
-              background: '#ffffff',
-              text: '#1a1a1a',
-              buttonText: '#ffffff'
-            }
+          error_callback: function(error) {
+            status.className = 'status error';
+            status.textContent = '❌ Ошибка оплаты';
+            btn.disabled = false;
           }
         });
 
@@ -97,12 +93,6 @@
           status.className = 'status success';
           status.textContent = '✅ Оплата прошла! Перенаправляем...';
           setTimeout(() => { window.location = 'https://eddytester.com/api'; }, 1500);
-        });
-
-        widget.on('error', function(e) {
-          status.className = 'status error';
-          status.textContent = '❌ Ошибка оплаты: ' + e;
-          btn.disabled = false;
         });
 
         widget.render('payment-container');
