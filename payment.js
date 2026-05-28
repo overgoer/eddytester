@@ -21,16 +21,20 @@ try {
   console.error('No .env found, using defaults');
 }
 
-function createPayment(amount, description, returnUrl) {
+function createPayment(amount, description, isTest) {
   return new Promise((resolve, reject) => {
     const idempotenceKey = crypto.randomUUID();
     const auth = Buffer.from(SHOP_ID + ':' + SECRET_KEY).toString('base64');
-    const body = JSON.stringify({
+    const paymentData = {
       amount: { value: amount.toFixed(2), currency: 'RUB' },
       confirmation: { type: 'embedded' },
       capture: true,
       description: description
-    });
+    };
+    if (isTest) {
+      paymentData.test = true;
+    }
+    const body = JSON.stringify(paymentData);
 
     const options = {
       hostname: 'api.yookassa.ru',
@@ -89,8 +93,9 @@ http.createServer((req, res) => {
         const data = JSON.parse(body);
         const amount = parseFloat(data.amount) || 2900;
         const description = data.description || 'API Практикум';
+        const isTest = data.test === true;
 
-        const payment = await createPayment(amount, description);
+        const payment = await createPayment(amount, description, isTest);
         const token = payment.confirmation.confirmation_token;
 
         console.log('[payment] Created:', payment.id, 'amount:', amount);

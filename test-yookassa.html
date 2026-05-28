@@ -43,7 +43,8 @@
     <h1>API Практикум</h1>
     <p>Доступ к тренажёру на 30 дней</p>
     <div class="price">2 900 ₽</div>
-    <button class="btn" id="payBtn" onclick="startPayment()">Купить</button>
+    <button class="btn" id="payBtn" onclick="startPayment(false)">Купить (2 900 ₽)</button>
+    <button class="btn" id="testBtn" onclick="startPayment(true)" style="margin-top:12px;background:#555;font-size:14px;padding:12px 24px;">🧪 Тестовый платёж (10 ₽)</button>
     <div id="payment-container"></div>
     <div id="status"></div>
     <div class="back"><a href="/api-practicum">← На лендинг</a></div>
@@ -51,8 +52,8 @@
 
   <script src="https://static.yoomoney.ru/checkout-client/checkout-widget.js"></script>
   <script>
-    async function startPayment() {
-      const btn = document.getElementById('payBtn');
+    async function startPayment(isTest) {
+      const btn = isTest ? document.getElementById('testBtn') : document.getElementById('payBtn');
       const status = document.getElementById('status');
       const container = document.getElementById('payment-container');
 
@@ -65,8 +66,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: 2900,
-            description: 'API Практикум'
+            amount: isTest ? 10 : 2900,
+            description: isTest ? 'Тестовый платёж API Практикум' : 'API Практикум',
+            test: isTest
           })
         });
 
@@ -84,7 +86,7 @@
           return_url: 'https://eddytester.com/api',
           error_callback: function(error) {
             status.className = 'status error';
-            status.textContent = '❌ Ошибка оплаты';
+            status.textContent = '❌ Ошибка оплаты: ' + (error.message || '');
             btn.disabled = false;
           }
         });
@@ -100,7 +102,8 @@
       } catch (e) {
         status.className = 'status error';
         status.textContent = '❌ ' + e.message;
-        btn.disabled = false;
+        document.getElementById('payBtn').disabled = false;
+        document.getElementById('testBtn').disabled = false;
       }
     }
   </script>
