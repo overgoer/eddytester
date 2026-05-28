@@ -181,6 +181,9 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - ✅ `page101918416.html` — Prodamus удалён, добавлен YooKassa Checkout Widget
 - ✅ **Тест пройден** — платёж 10₽ успешно проведён через Tinkoff (карта MIR, без 3-D Secure)
 - ✅ CDN виджета: `https://yookassa.ru/checkout-widget/v1/checkout-widget.js` (класс `YooMoneyCheckoutWidget`)
+- ✅ Кнопка "Начать учиться" в блоке "Стоимость" открывает попап с оплатой (исправлено: вела в Telegram)
+- ✅ В попапе отображается цена 2 900 ₽ в стиле основного сайта
+- ✅ Исправлен баг: пропущенная `)` в конструкторе YooMoneyCheckoutWidget
 - ✅ Вмержено в main, задеплоено в продакшен
 - ⬜ **Создать тестовый магазин** в ЛК ЮKassa (`https://yookassa.ru/my/`) для безопасного тестирования
 - ⬜ Настроить рефанды — через Tinkoff gateway не работают, нужна конфигурация в ЛК ЮKassa
@@ -204,10 +207,11 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 
 ### 4. Уборка на сервере
 
-- Удалить `/var/www/eddytester.com/page101918416.html.bak`
-- Удалить `/var/www/eddytester.com/test.html`
-- Удалить `/var/www/eddytester.com/readme.txt`
-- Разобраться с `index.html` в корне (содержит старый Prodamus код)
+- ✅ Удалён `/var/www/eddytester.com/test.html`
+- ✅ Удалён `/var/www/eddytester.com/test-yookassa.html`
+- ⬜ Удалить `/var/www/eddytester.com/page101918416.html.bak`
+- ⬜ Удалить `/var/www/eddytester.com/readme.txt`
+- ⬜ Разобраться с `index.html` в корне (содержит старый Prodamus код)
 
 ### 5. Инфраструктура
 
