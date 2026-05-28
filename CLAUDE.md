@@ -177,7 +177,7 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - ✅ `.env` на сервере с shopId + secretKey
 - ✅ Apache ProxyPass `/create-payment` → localhost:3457 (в HTTP и SSL конфигах)
 - ✅ Бэкенд возвращает confirmation_token от ЮKassa
-- ✅ Тестовая страница: `https://eddytester.com/test-yookassa.html`
+- ✅ Тестовая страница: `https://eddytester.com/test-yookassa.html` (удалена после теста)
 - ✅ `page101918416.html` — Prodamus удалён, добавлен YooKassa Checkout Widget
 - ✅ **Тест пройден** — платёж 10₽ успешно проведён через Tinkoff (карта MIR, без 3-D Secure)
 - ✅ CDN виджета: `https://yookassa.ru/checkout-widget/v1/checkout-widget.js` (класс `YooMoneyCheckoutWidget`)
@@ -239,9 +239,17 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - **Urgency** — таймер к Early Bird (опрос по желанию)
 - **Plausible** (`github.com/plausible/analytics`) — лёгкая self-hosted аналитика (Go-бинарник, 20 KB скрипт, встанет на Timeweb)
 - **PostHog** (`github.com/PostHog/posthog`) — мощная self-hosted аналитика + A/B тесты (Docker, тяжелее)
+- **Текст при успешной оплате** — сейчас редирект на `/api`. Лучше показать сообщение "Доступ открыт, проверь почту"
+- **Виджет ЮKassa на defer** — перенести загрузку скрипта виджета в `defer` для ускорения LCP
 - ⬜ Добавить Telegram-уведомления о продлении сертификата
 
-### 6. Тестирование изменений
+### 8. Ближайшие правки (ветка `feat/conversion-optimization`)
+
+- ⬜ Click-трекинг: dataLayer-события на кнопки покупки (пригодится для будущей аналитики)
+- ⬜ WebP-картинки: конвертировать 12 изображений, заменить пути в HTML
+- ⬜ Блок гарантии возврата: добавить текст рядом с кнопкой покупки
+
+### 9. Тестирование изменений
 
 При изменениях лендинга:
 1. Проверять локально — открыть HTML-файл в браузере (Tilda-экспорт работает как статика, сервер не нужен)
