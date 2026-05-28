@@ -24,7 +24,12 @@ aria-modal="true"
 tabindex="-1"> <div class="t-popup__close t-popup__block-close"> <button
 type="button"
 class="t-popup__close-wrapper t-popup__block-close-button"
-aria-label="Закрыть диалоговое окно"> <svg role="presentation" class="t-popup__close-icon" width="23px" height="23px" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <g stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd"> <rect transform="translate(11.313708, 11.313708) rotate(-45.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> <rect transform="translate(11.313708, 11.313708) rotate(-315.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> </g> </svg> </button> </div> <div class="t-popup__container t-width t-width_10" style="height:800px;"> <div class="t868__code-wrap"> <div id="yookassa-checkout-container" style="min-height:400px;"></div> </div> </div> </div> </div> <script>t_onReady(function() {setTimeout(function() {t_onFuncLoad('t868_initPopup',function() {t868_initPopup('1666198241');});},500);});</script> </div> 
+aria-label="Закрыть диалоговое окно"> <svg role="presentation" class="t-popup__close-icon" width="23px" height="23px" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <g stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd"> <rect transform="translate(11.313708, 11.313708) rotate(-45.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> <rect transform="translate(11.313708, 11.313708) rotate(-315.000000) translate(-11.313708, -11.313708) " x="10.3137085" y="-3.6862915" width="2" height="30"></rect> </g> </svg> </button> </div> <div class="t-popup__container t-width t-width_10" style="max-height:90vh;overflow-y:auto;padding:20px;display:flex;align-items:flex-start;justify-content:center;"> <div class="t868__code-wrap" style="width:100%;max-width:480px;"> <div style="text-align:center;margin-bottom:24px;">
+  <div style="font-size:16px;color:#1a1a1a;margin-bottom:8px;font-weight:500;">API Практикум · 30 дней доступа</div>
+  <div style="font-size:48px;font-weight:800;color:#036cff;line-height:1;">2&nbsp;900&nbsp;<span style="font-size:24px;font-weight:600;">₽</span></div>
+  <div style="font-size:13px;color:#888;margin-top:6px;">Early Bird · цена на старте</div>
+</div>
+<div id="yookassa-checkout-container" style="min-height:400px;"></div> </div> </div> </div> </div> <script>t_onReady(function() {setTimeout(function() {t_onFuncLoad('t868_initPopup',function() {t868_initPopup('1666198241');});},500);});</script> </div> 
 <script>
 // YooKassa payment handler
 let ykWidget = null;
@@ -48,7 +53,7 @@ async function openYooKassaPayment() {
         error_callback: function(error) {
           document.getElementById("yookassa-checkout-container").innerHTML = "<div style=\"text-align:center;padding:40px;color:#d32f2f;\">\u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u043f\u043b\u0430\u0442\u044b</div>";
         }
-      }
+      });
       ykWidget.on("success", function() { window.location = "https://eddytester.com/api"; });
       ykWidget.render("yookassa-checkout-container");
     }
