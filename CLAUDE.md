@@ -200,20 +200,18 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - Тестовые карты ЮKassa: `5555555555554444` (Mastercard без 3DS), `4111111111111111` (Visa без 3DS) и др.
 - Production магазин игнорирует `test: true` — для тестовых платежей нужен тестовый магазин
 
-### 3. Рефакторинг: один попап ЮKassa для всех кнопок
+### 3. Попап ЮKassa — рефакторинг ✅ СДЕЛАНО
 
-Сейчас цена 2 900 ₽ зашита в HTML попапа и в JS. Задача:
-- Одна функция `openYooKassaPayment(amount, description)`
-- Кнопки хранят цену в `data-amount` и `data-description`
-- JS читает атрибуты с кнопки, подставляет в попап и в API-запрос
-- Одна итерация: перевести pricing-кнопку на новую схему
+Все кнопки "Купить"/"Начать учиться" используют `data-amount`/`data-description`.
+Функция `openYooKassaPayment(amount, description)` — универсальная, цена берётся с кнопки.
+Остальные кнопки добавлены (меню, CTA в герое, CTA внизу).
 
 ### 4. Тестовый магазин ЮKassa
 
 Создать тестовый магазин в ЛК ЮKassa (`https://yookassa.ru/my/`), получить shopId + secretKey.
 Обновить `payment.js` для поддержки тестовых ключей (переключение по `test: true`).
 
-### 4. Уборка на сервере
+### 5. Уборка на сервере
 
 - ✅ Удалён `/var/www/eddytester.com/test.html`
 - ✅ Удалён `/var/www/eddytester.com/test-yookassa.html`
@@ -221,12 +219,26 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - ⬜ Удалить `/var/www/eddytester.com/readme.txt`
 - ⬜ Разобраться с `index.html` в корне (содержит старый Prodamus код)
 
-### 5. Инфраструктура
+### 6. Инфраструктура
 
 - ⬜ Починить SSH (периодически "Connection timed out during banner exchange" на порту 2222)
 - ⬜ `certbot renew --dry-run` — запустить когда SSH заработает
 - ⬜ Удалить дубли в crontab (`sort -u`)
 - ⬜ PM2: в памяти 6.0.14, локально 7.0.1 — нужен `pm2 update`
+
+### 7. SEO и конверсия (рекомендации)
+
+**Что сделано:**
+- ✅ og:description заполнен
+- ⬜ **GA4** — добавить скрипт GA4 (нужен Measurement ID)
+
+**Рекомендации (низкий приоритет):**
+- **Социальное доказательство** — блок отзывов, счётчик "N студентов"
+- **Гарантия возврата** — блок про возврат денег (снимает возражения)
+- **WebP-картинки** — конвертировать 12 изображений для ускорения загрузки
+- **Urgency** — таймер к Early Bird (опрос по желанию)
+- **Plausible** (`github.com/plausible/analytics`) — лёгкая self-hosted аналитика (Go-бинарник, 20 KB скрипт, встанет на Timeweb)
+- **PostHog** (`github.com/PostHog/posthog`) — мощная self-hosted аналитика + A/B тесты (Docker, тяжелее)
 - ⬜ Добавить Telegram-уведомления о продлении сертификата
 
 ### 6. Тестирование изменений
