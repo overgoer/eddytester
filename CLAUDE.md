@@ -132,7 +132,9 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - **Не удалять** другие `page*.html` — они используются как отдельные страницы
 - **CSS/JS/images** лежат в соответствующих папках (ссылаются из Tilda-экспорта)
 - **Баги в v1 API — учебные, не чинить** (проект `v0-test-api`)
-- **Prodamus** настроен на `eddytester.payform.ru`, виджет ещё не встроен
+- **ЮKassa** — платёжная система (shopId: 1367335, ключ в .env на сервере)
+- **Prodamus** — удалён с 2026-05-28
+- **Платежный бэкенд:** `payment.js` на порту 3457, запущен через PM2
 
 ## Связь с продуктом
 
@@ -168,13 +170,30 @@ fix: sync repo with deployed state (CTA restyle + free trial button)
 - Уведомления пока через sendmail на root. Для Telegram — нужен бот-токен
 - Если SSH не работает — через аптайм сервера, Apache не перезагружать
 
-### 2. Уборка на сервере
+### 2. ЮKassa — платежи — 🟡 В РАБОТЕ (ветка feat/yookassa-payments)
+
+**Статус на 2026-05-28:**
+- ✅ `payment.js` — Node.js сервер на порту 3457 (PM2, payment-yookassa)
+- ✅ `.env` на сервере с shopId + secretKey
+- ✅ Apache ProxyPass `/create-payment` → localhost:3457 (в HTTP и SSL конфигах)
+- ✅ Бэкенд возвращает confirmation_token от ЮKassa
+- ✅ Тестовая страница: `https://eddytester.com/test-yookassa.html`
+- ✅ `page101918416.html` — Prodamus удалён, добавлен YooKassa Checkout Widget
+- ⬜ **Тест в браузере** — открыть `test-yookassa.html`, нажать "Купить", провести тестовый платёж
+- ⬜ Мерж в main после теста
+
+**Архитектура:**
+- Кнопка "Купить" → POST /create-payment → ЮKassa API → confirmation_token → YooKassaCheckoutWidget
+- После оплаты → редирект на `https://eddytester.com/api`
+- Ключи в `/var/www/eddytester.com/.env`
+
+### 3. Уборка на сервере
 
 - Удалить `/var/www/eddytester.com/page101918416.html.bak`
 - Удалить `/var/www/eddytester.com/test.html`
 - Удалить `readme.txt`
 
-### 3. Тестирование изменений (вместо пароля)
+### 4. Тестирование изменений (вместо пароля)
 
 При изменениях лендинга:
 1. Проверять локально — открыть HTML-файл в браузере (Tilda-экспорт работает как статика, сервер не нужен)
